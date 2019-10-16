@@ -12,19 +12,21 @@ if n < 2:
 time_start = time.time()
 
 
-prime = [True] * int((n + 1) / 2)
+prime = [True] * n
 prime[0] = False
+prime[1] = False
 
 sqrt_n = math.sqrt(n)
 floor_n = math.floor(n)
 
-for i in range(1, int(floor_n / 2)):
+for i in range(2, floor_n):
     if not  prime[i]:
         continue
-    p = 2 * i + 1
+    # p = 2 * i + 1
 
     # NOTE: 2 * i (i + 1) == p^2
-    for j in range(2 * i * (i + 1), len(prime), p):
+    # for j in range(2 * i * (i + 1), len(prime), p):
+    for j in range(i * i, n, i):
         prime[j] =  False
 
 
