@@ -32,9 +32,10 @@ time_end = time.time()
 tim = round(time_end - time_start, 8)
 print('{}秒'.format(tim))
 
-prime_count = prime.count(True)
+# NOTE: 偶数である2をcountに追加
+prime_count = prime.count(True) + 1
 print('{0}未満の素数の個数は{1}です'.format(n, prime_count))
 
-for i in range(1, len(prime)):
-    if prime[i] == True:
-        print('{}'.format(i))
+# for i in range(1, len(prime)):
+#     if prime[i] == True:
+#         print('{}'.format(i))
