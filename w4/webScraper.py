@@ -1,38 +1,62 @@
 import requests
 from bs4 import BeautifulSoup
-import os
-import re
-
-# status_code = get_url_info.status_code
-
-# print(status_code)
-
-# if not (status_code == 200):
-# sys.exit(status=None)
-# get_url_info = requests.get('https://qiita.com/__init__/items/d53a281ef757b22f4732')
-# get_url_info.raise_for_status()
+# import os
 
 def scrape_web(url):
-    get_url_info = requests.get(url)
-    # FIXME: 読み込めなかった時にexitされないようにする
+    for i in range(3):
+        print('---------------')
+        try:
+            get_url_info = requests.get(url)
+        except:
+            print('{}はアクセスできひん...'.format(url))
+            print()
+            return
 
-    soup = BeautifulSoup(get_url_info.text, 'lxml')
-    url_list = [] * 1
+        soup = BeautifulSoup(get_url_info.text, 'lxml')
+        url_list = []
 
-    for a in soup.find_all('a'):
-        href_path = a.get('href')
-        if href_path.startswith('http://'):
-            url_list.append(href_path)
+        # FIXME: titleタグあるのに文字化け(?)してしまう
+        print(soup.title.string)
+        print('({})'.format(url))
+        print('---------------')
 
-    return url_list
+        # TODO: metaタグのcontentにも対応させる
+        for a_tag_list in soup.find_all('a'):
+            if not a_tag_list:
+                break
+            href_path = a_tag_list.get('href')
+            if href_path is None:
+                continue
+            if href_path.startswith('http://'):
+                url_list.append(href_path)
+                print(href_path)
+
+        print()
+        return url_list
 
 
-ans = scrape_web("https://qiita.com/__init__/items/d53a281ef757b22f4732")
-print(ans)
+def loop_scrape(url_list):
+    for i in range(len(url_list)):
+        scrape_web(url_list[i])
 
-ans2 = scrape_web(ans[0])
-print(ans2)
+input_url = input('URL入力してな: ')
 
-for i in range(len(ans)):
-    tmp_ans = scrape_web(ans[i])
-    print(tmp_ans)
+# TODO: 何層スクレイピングするかの指定
+"""
+loop_count = input('何層スクレイピングする？: ')
+if not type(loop_count is int):
+    print('int型でよろしゅう')
+    sys.exit(status=None)
+loop_count = int(loop_count)
+if loop_count < 1:
+    print('1層以上でよろしゅう')
+    sys.exit(status=None)
+if loop_count > 5:
+    print('5層以上はきついで...')
+    sys.exit(status=None)
+"""
+
+print('---1---')
+input_url_list = scrape_web(input_url)
+print('---2---')
+loop_scrape(input_url_list)
