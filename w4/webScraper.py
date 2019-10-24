@@ -62,8 +62,11 @@ input_url = input('URL入力してな: ')
 
 print('---1---')
 input_url_list = scrape_web(input_url)
-print('---2---')
-second_url_list = single_loop_scrape(input_url_list)
+second_url_show = input('2層目のURLリストアップする？ y/n: ')
+
+if second_url_show in {'y', 'yes'}:
+    print('---2---')
+    second_url_list = single_loop_scrape(input_url_list)
 
 third_url_show = input('3層目のURLリストアップする？ y/n: ')
 if third_url_show in {'y', 'yes'}:
