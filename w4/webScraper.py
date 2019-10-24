@@ -2,38 +2,46 @@ import requests
 from bs4 import BeautifulSoup
 
 def scrape_web(url):
-    for i in range(3):
-        print('---------------')
-        try:
-            get_url_info = requests.get(url)
-        except:
-            print('{}はアクセスできひん...'.format(url))
-            print()
-            return
-
-        soup = BeautifulSoup(get_url_info.content, 'lxml')
-        url_list = []
-
-        try:
-            print(soup.title.string)
-        except:
-            pass
-        print('({})'.format(url))
-        print('---------------')
-
-        # TODO: metaタグのcontentにも対応させる
-        for a_tag_list in soup.find_all('a'):
-            if not a_tag_list:
-                break
-            href_path = a_tag_list.get('href')
-            if href_path is None:
-                continue
-            if href_path.startswith(('https://', 'http://')) and not href_path in url_list:
-                url_list.append(href_path)
-                print(href_path)
-
+    print('---------------')
+    try:
+        get_url_info = requests.get(url)
+    except:
+        print('{}はアクセスできん...'.format(url))
         print()
-        return url_list
+        return
+
+    soup = BeautifulSoup(get_url_info.content, 'lxml')
+    url_list = []
+
+    try:
+        print(soup.title.string)
+    except:
+        pass
+    print('({})'.format(url))
+    print('---------------')
+
+    for a_tag_list in soup.find_all('a'):
+        if not a_tag_list:
+            break
+        href_elem = a_tag_list.get('href')
+        if href_elem is None:
+            continue
+        if href_elem.startswith(('http://', 'https://')) and not href_elem in url_list:
+            url_list.append(href_elem)
+            print(href_elem)
+
+    for meta_tag_list in soup.find_all('meta'):
+        if not meta_tag_list:
+            break
+        content_elem = meta_tag_list.get('content')
+        if content_elem is None:
+            continue
+        if content_elem.startswith(('http://', 'https://')) and not content_elem in url_list:
+            url_list.append(content_elem)
+            print(content_elem)
+
+    print()
+    return url_list
 
 
 def loop_scrape(url_list):
