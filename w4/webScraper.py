@@ -15,8 +15,11 @@ def scrape_web(url):
         soup = BeautifulSoup(get_url_info.text, 'lxml')
         url_list = []
 
-        # FIXME: titleタグあるのに文字化け(?)してしまう
-        print(soup.title.string)
+        # FIXME: titleタグあるのに文字化け(?)してしまうことがある
+        try:
+            print(soup.title.string)
+        except:
+            pass
         print('({})'.format(url))
         print('---------------')
 
@@ -27,7 +30,7 @@ def scrape_web(url):
             href_path = a_tag_list.get('href')
             if href_path is None:
                 continue
-            if href_path.startswith('http://'):
+            if href_path.startswith(('https://', 'http://')):
                 url_list.append(href_path)
                 print(href_path)
 
@@ -36,9 +39,19 @@ def scrape_web(url):
 
 
 def loop_scrape(url_list):
-    for i in range(len(url_list)):
-        scrape_web(url_list[i])
+    len_url_list = len(url_list)
+    second_url_list = [[] for i in range(len_url_list)]
+    for i in range(len_url_list):
+        second_url_list.append(scrape_web(url_list[i]))
+    return second_url_list
 
+def double_loop_scrape(second_url_list):
+    for i in range(len(second_url_list)):
+        for j in range(len(second_url_list[i])):
+            scrape_web(second_url_list[i][j])
+
+
+# NOTE: def main
 input_url = input('URL入力してな: ')
 
 # TODO: 何層スクレイピングするかの指定
@@ -59,4 +72,7 @@ if loop_count > 5:
 print('---1---')
 input_url_list = scrape_web(input_url)
 print('---2---')
-loop_scrape(input_url_list)
+second_url_list = loop_scrape(input_url_list)
+
+# print('---3---')
+# double_loop_scrape(second_url_list)
