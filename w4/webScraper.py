@@ -44,9 +44,9 @@ def scrape_web(url):
     return url_list
 
 
-def loop_scrape(url_list):
+def single_loop_scrape(url_list):
     len_url_list = len(url_list)
-    second_url_list = [[] for i in range(len_url_list)]
+    second_url_list = [[]]
     for i in range(len_url_list):
         second_url_list.append(scrape_web(url_list[i]))
     return second_url_list
@@ -63,7 +63,7 @@ input_url = input('URL入力してな: ')
 print('---1---')
 input_url_list = scrape_web(input_url)
 print('---2---')
-second_url_list = loop_scrape(input_url_list)
+second_url_list = single_loop_scrape(input_url_list)
 
 third_url_show = input('3層目のURLリストアップする？ y/n: ')
 if third_url_show in {'y', 'yes'}:
