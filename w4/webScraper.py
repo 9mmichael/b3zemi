@@ -1,6 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 
+"""
+教授レビュー
+- もう少し短く
+- コピペ実装的なのをなくす
+"""
+
 def scrape_web(url):
     print('---------------')
     try:
