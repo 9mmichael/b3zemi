@@ -38,6 +38,7 @@ class Parser(val str: String) {
         .toInt()
   }
 
+  // NOTE: expression = term, {("+", term) | ("-", term)}
   fun expression(): Int {
     var num = term()
     loop@ do {
@@ -59,6 +60,7 @@ class Parser(val str: String) {
     return num
   }
 
+  // NOTE: term = factor, {("*", factor) | ("/", factor)}
   fun term(): Int {
     var num = readNumber()
     loop@ do {
