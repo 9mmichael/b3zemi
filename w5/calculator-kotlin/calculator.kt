@@ -39,27 +39,43 @@ class Parser(val str: String) {
   }
 
   fun expression(): Int {
-    var num = readNumber()
-    do {
+    var num = term()
+    loop@ do {
       if (lastPosition() < 0) break
       when (str[lastPosition()]) {
         '+' -> {
           nextPosition()
-          num += readNumber()
+          num += term()
+          continue@loop
         }
         '-' -> {
           nextPosition()
-          num -= readNumber()
+          num -= term()
+          continue@loop
         }
+      }
+      break@loop
+    } while (true)
+    return num
+  }
+
+  fun term(): Int {
+    var num = readNumber()
+    loop@ do {
+      if (lastPosition() < 0) break
+      when (str[lastPosition()]) {
         '*' -> {
           nextPosition()
           num *= readNumber()
+          continue@loop
         }
         '/' -> {
           nextPosition()
           num /= readNumber()
+          continue@loop
         }
       }
+      break@loop
     } while (true)
     return num
   }
