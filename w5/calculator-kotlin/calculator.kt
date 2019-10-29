@@ -8,6 +8,7 @@ fun main(args: Array<String>) {
   println(Parser("2*3+4").expression())
   println(Parser("2+3*4").expression())
   println(Parser("100/10/2").expression())
+  println(Parser("(2+3)*4").expression())
 }
 
 class Parser(val str: String) {
@@ -62,23 +63,37 @@ class Parser(val str: String) {
 
   // NOTE: term = factor, {("*", factor) | ("/", factor)}
   fun term(): Int {
-    var num = readNumber()
+    var num = factor()
     loop@ do {
       if (lastPosition() < 0) break
       when (str[lastPosition()]) {
         '*' -> {
           nextPosition()
-          num *= readNumber()
+          num *= factor()
           continue@loop
         }
         '/' -> {
           nextPosition()
-          num /= readNumber()
+          num /= factor()
           continue@loop
         }
       }
       break@loop
     } while (true)
     return num
+  }
+
+  // NOTE: factor = {"(", expression, ")"} | number
+  fun factor(): Int {
+    var bracket: Int
+    if (str[lastPosition()] == '(') {
+      nextPosition()
+      bracket = expression()
+      if (str[lastPosition()] == ')') {
+        nextPosition()
+      }
+      return bracket
+    }
+    return readNumber()
   }
 }
