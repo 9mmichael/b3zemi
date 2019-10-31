@@ -1,3 +1,10 @@
+/**
+ * 教授レビュー
+ *
+ * - 単項演算子にも対応
+ * e.g. 1 - (-2)
+ */
+
 fun main(args: Array<String>) {
   loop@ while (true) {
     print("数式を入力してください: ")
