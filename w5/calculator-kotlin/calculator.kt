@@ -40,6 +40,7 @@ class Parser(val str: String) {
   }
 
   // NOTE: expression = term, {("+", term) | ("-", term)}
+  // NOTE: e.g. 5, 1+2, 4-1
   fun expression(): Int {
     var num = term()
     loop@ do {
@@ -62,6 +63,7 @@ class Parser(val str: String) {
   }
 
   // NOTE: term = factor, {("*", factor) | ("/", factor)}
+  // NOTE:  e.g. 4, 2*3, 6/2
   fun term(): Int {
     var num = factor()
     loop@ do {
@@ -84,6 +86,7 @@ class Parser(val str: String) {
   }
 
   // NOTE: factor = {"(", expression, ")"} | number
+  // NOTE: e.g. (2*3+3), 3
   fun factor(): Int {
     var bracket: Int
     if (str[lastPosition()] == '(') {
