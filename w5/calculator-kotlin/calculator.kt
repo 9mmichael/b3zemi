@@ -1,14 +1,17 @@
 fun main(args: Array<String>) {
-//    print("数式を入力してください: ")
-//    val expression = readLine()
-
-  println(Parser("12+34+56").expression())
-  println(Parser("1-2-3").expression())
-  println(Parser("1-2+3").expression())
-  println(Parser("2*3+4").expression())
-  println(Parser("2+3*4").expression())
-  println(Parser("100/10/2").expression())
-  println(Parser("(2+3)*4").expression())
+  loop@ while (true) {
+    print("数式を入力してください: ")
+    val str = readLine()
+    if (str == null || str.equals("")) {
+      println("何か入力してください \n")
+      continue@loop
+    }
+    if (str.equals("q") || str.equals("quit")) {
+      break@loop
+    } else {
+      println(str + " = " + Parser(str).expression() + "\n")
+    }
+  }
 }
 
 class Parser(val str: String) {
@@ -37,6 +40,13 @@ class Parser(val str: String) {
     } while (true)
     return sb.toString()
         .toInt()
+  }
+
+  fun spaces() {
+    if (lastPosition() < 0) return
+    while (str.get(lastPosition()).isWhitespace()) {
+      nextPosition()
+    }
   }
 
   // NOTE: expression = term, {("+", term) | ("-", term)}
@@ -89,14 +99,17 @@ class Parser(val str: String) {
   // NOTE: e.g. (2*3+3), 3
   fun factor(): Int {
     var bracket: Int
+    spaces()
     if (str[lastPosition()] == '(') {
       nextPosition()
       bracket = expression()
       if (str[lastPosition()] == ')') {
         nextPosition()
       }
-      return bracket
+    } else {
+      bracket = readNumber()
     }
-    return readNumber()
+    spaces()
+    return bracket
   }
 }
